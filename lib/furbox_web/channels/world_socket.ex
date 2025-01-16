@@ -10,7 +10,7 @@ defmodule FurboxWeb.WorldSocket do
   # Uncomment the following line to define a "room:*" topic
   # pointing to the `FurboxWeb.RoomChannel`:
   #
-  channel "world:*", FurboxWeb.WorldChannel
+  channel "furbox:*", FurboxWeb.WorldChannel
   #
   # To create a channel file, use the mix task:
   #

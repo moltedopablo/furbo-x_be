@@ -1,9 +1,8 @@
 defmodule FurboxWeb.WorldChannel do
   use FurboxWeb, :channel
 
-
   @impl true
-  def join("world:lobby", payload, socket) do
+  def join("furbox:main", payload, socket) do
     if authorized?(payload) do
       {:ok, socket}
     else
@@ -14,16 +13,16 @@ defmodule FurboxWeb.WorldChannel do
   # Channels can be used in a request/response fashion
   # by sending replies to requests from the client
   @impl true
-  def handle_in("ping", payload, socket) do
-    IO.inspect(payload, label: "ping")
+  def handle_in("get_state", _payload, socket) do
+    payload = Furbox.World.get_state()
     {:reply, {:ok, payload}, socket}
   end
 
   # It is also common to receive messages from the client and
   # broadcast to everyone in the current topic (world:lobby).
   @impl true
-  def handle_in("shout", payload, socket) do
-    broadcast(socket, "shout", payload)
+  def handle_in("move_player", %{"offset" => [offset_x, offset_y], "player" => player}, socket) do
+    Furbox.World.move_player(player, [offset_x, offset_y])
     {:noreply, socket}
   end
 

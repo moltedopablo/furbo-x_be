@@ -20,7 +20,8 @@ defmodule Furbox.Application do
       # Start a worker by calling: Furbox.Worker.start_link(arg)
       # {Furbox.Worker, arg},
       # Start to serve requests, typically the last entry
-      FurboxWeb.Endpoint
+      FurboxWeb.Endpoint,
+      Furbox.World
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
