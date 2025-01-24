@@ -1,0 +1,13 @@
+[package]
+name = "rapierex"
+version = "0.1.0"
+authors = []
+edition = "2021"
+
+[lib]
+name = "rapierex"
+crate-type = ["cdylib"]
+
+[dependencies]
+rustler = "0.34.0"
+rapier2d = { version = "0.23.0", features = [ "simd-stable" ] }

@@ -21,7 +21,8 @@ defmodule Furbox.Application do
       # {Furbox.Worker, arg},
       # Start to serve requests, typically the last entry
       FurboxWeb.Endpoint,
-      Furbox.World
+      Furbox.World,
+      Furbox.Stepper
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
