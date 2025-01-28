@@ -9,7 +9,8 @@ defmodule Furbox.World do
     :ball => %{
       :position => {0.0, 0.0},
       :lin_vel => {0.0, 0.0},
-      :shoot_dir => {0.0, 0.0}
+      :shoot_dir => {0.0, 0.0},
+      :scale => 1.0
     },
     :players => []
   }
@@ -89,7 +90,7 @@ defmodule Furbox.World do
               :position => {player_number / 1, 0.0},
               :lin_vel => {0.0, 0.0},
               :movement => {0.0, 0.0},
-              :last_movement => {0.0, 0.0}
+              :scale => 1.4
             }
           ]
       end)
@@ -125,7 +126,7 @@ defmodule Furbox.World do
       ball: %{position: [state.ball.position |> elem(0), state.ball.position |> elem(1)]},
       players:
         Enum.map(state.players, fn p ->
-          %{id: p.id, position: [p.position |> elem(0), p.position |> elem(1)]}
+          %{id: p.id, position: [p.position |> elem(0), p.position |> elem(1)], scale: p.scale}
         end)
     }
   end

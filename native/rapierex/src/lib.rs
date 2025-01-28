@@ -7,6 +7,7 @@ pub struct Ball {
     pub position: (f32, f32),
     pub lin_vel: (f32, f32),
     pub shoot_dir: (f32, f32),
+    pub scale: f32,
 }
 #[derive(NifMap)]
 pub struct Player {
@@ -14,6 +15,7 @@ pub struct Player {
     pub position: (f32, f32),
     pub lin_vel: (f32, f32),
     pub movement: (f32, f32),
+    pub scale: f32,
 }
 #[derive(NifMap)]
 pub struct Court {
@@ -90,7 +92,7 @@ fn step(ball: Ball, court: Court, players: Vec<Player>) -> (Ball, Vec<Player>) {
             true,
         );
     }
-    let collider = ColliderBuilder::ball(1.0).restitution(0.7).build();
+    let collider = ColliderBuilder::ball(ball.scale).restitution(0.7).build();
     let ball_body_handle = rigid_body_set.insert(rigid_body);
     collider_set.insert_with_parent(collider, ball_body_handle, &mut rigid_body_set);
 
@@ -119,7 +121,7 @@ fn step(ball: Ball, court: Court, players: Vec<Player>) -> (Ball, Vec<Player>) {
                 true,
             );
         }
-        let collider = ColliderBuilder::ball(1.0).restitution(0.7).build();
+        let collider = ColliderBuilder::ball(player.scale).restitution(0.7).build();
         let character_body_handle = rigid_body_set.insert(rigid_body);
         collider_set.insert_with_parent(collider, character_body_handle, &mut rigid_body_set);
         character_body_handles.push(character_body_handle);
@@ -170,6 +172,7 @@ fn step(ball: Ball, court: Court, players: Vec<Player>) -> (Ball, Vec<Player>) {
             ),
             lin_vel: (character_body.linvel().x, character_body.linvel().y),
             movement: (0.0, 0.0),
+            scale: cloned_players[i].scale.clone(),
         });
     }
     return (
@@ -177,6 +180,7 @@ fn step(ball: Ball, court: Court, players: Vec<Player>) -> (Ball, Vec<Player>) {
             position: (ball_body.translation().x, ball_body.translation().y),
             lin_vel: (ball_body.linvel().x, ball_body.linvel().y),
             shoot_dir: (0.0, 0.0),
+            scale: ball.scale.clone(),
         },
         updated_players,
     );
