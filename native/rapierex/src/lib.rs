@@ -30,6 +30,7 @@ fn step(ball: Ball, court: Court, players: Vec<Player>) -> (Ball, Vec<Player>) {
     let mut rigid_body_set = RigidBodySet::new();
     let mut collider_set = ColliderSet::new();
 
+    let walls_restituion = 1.0;
     /* Create the court. Upper and Lower sides */
     let collider = ColliderBuilder::polyline(
         vec![
@@ -39,7 +40,7 @@ fn step(ball: Ball, court: Court, players: Vec<Player>) -> (Ball, Vec<Player>) {
             point![court.width / 2.0, court.goal_width / 2.0],
         ],
         None,
-    );
+    ).restitution(walls_restituion);
     collider_set.insert(collider);
 
     let collider = ColliderBuilder::polyline(
@@ -50,7 +51,7 @@ fn step(ball: Ball, court: Court, players: Vec<Player>) -> (Ball, Vec<Player>) {
             point![court.width / 2.0, -court.goal_width / 2.0],
         ],
         None,
-    );
+    ).restitution(walls_restituion);
     collider_set.insert(collider);
 
     /* Create left goal */
@@ -62,7 +63,7 @@ fn step(ball: Ball, court: Court, players: Vec<Player>) -> (Ball, Vec<Player>) {
             point![-court.width / 2.0, -court.goal_width / 2.0],
         ],
         None,
-    );
+    ).restitution(walls_restituion);
     collider_set.insert(collider);
 
     /* Create right goal */
@@ -74,7 +75,7 @@ fn step(ball: Ball, court: Court, players: Vec<Player>) -> (Ball, Vec<Player>) {
             point![court.width / 2.0, -court.goal_width / 2.0],
         ],
         None,
-    );
+    ).restitution(walls_restituion);
     collider_set.insert(collider);
 
     /* Create the bouncing ball. */
@@ -92,7 +93,7 @@ fn step(ball: Ball, court: Court, players: Vec<Player>) -> (Ball, Vec<Player>) {
             true,
         );
     }
-    let collider = ColliderBuilder::ball(ball.scale).restitution(0.7).build();
+    let collider = ColliderBuilder::ball(ball.scale).restitution(0.9).build();
     let ball_body_handle = rigid_body_set.insert(rigid_body);
     collider_set.insert_with_parent(collider, ball_body_handle, &mut rigid_body_set);
 
@@ -121,7 +122,7 @@ fn step(ball: Ball, court: Court, players: Vec<Player>) -> (Ball, Vec<Player>) {
                 true,
             );
         }
-        let collider = ColliderBuilder::ball(player.scale).restitution(0.7).build();
+        let collider = ColliderBuilder::ball(player.scale).restitution(0.9).build();
         let character_body_handle = rigid_body_set.insert(rigid_body);
         collider_set.insert_with_parent(collider, character_body_handle, &mut rigid_body_set);
         character_body_handles.push(character_body_handle);
