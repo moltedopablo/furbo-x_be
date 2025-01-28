@@ -2,6 +2,7 @@ defmodule Furbox.Stepper do
   alias Furbox.World
   use GenServer
 
+  @interval 10
   def start_link(_) do
     GenServer.start_link(__MODULE__, %{})
   end
@@ -20,6 +21,6 @@ defmodule Furbox.Stepper do
   end
 
   defp schedule_work do
-    Process.send_after(self(), :work, 10)
+    Process.send_after(self(), :work, @interval)
   end
 end

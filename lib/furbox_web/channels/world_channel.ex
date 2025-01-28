@@ -27,6 +27,11 @@ defmodule FurboxWeb.WorldChannel do
     {:noreply, socket}
   end
 
+  def handle_in("kick", %{"player" => player}, socket) do
+    Furbox.World.kick(player)
+    {:noreply, socket}
+  end
+
   # Add authorization logic here as required.
   defp authorized?(_payload) do
     true

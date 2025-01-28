@@ -35,7 +35,10 @@ fn step(ball: Ball, players: Vec<Player>) -> (Ball, Vec<Player>) {
         .linear_damping(0.5)
         .build();
     if ball.shoot_dir.0 != 0.0 || ball.shoot_dir.1 != 0.0 {
-        rigid_body.add_force(vector![ball.shoot_dir.0, ball.shoot_dir.1], true);
+        rigid_body.set_linvel(
+            vector![ball.shoot_dir.0 * 18.0, ball.shoot_dir.1 * 18.0],
+            true,
+        );
     }
     let collider = ColliderBuilder::ball(1.0).restitution(0.7).build();
     let ball_body_handle = rigid_body_set.insert(rigid_body);
@@ -51,12 +54,18 @@ fn step(ball: Ball, players: Vec<Player>) -> (Ball, Vec<Player>) {
                 0.0,
             ))
             .linvel(vector![player.lin_vel.0, player.lin_vel.1])
-            .linear_damping(1.4)
+            .linear_damping(5.0)
             .build();
 
-        if player.movement.0 != 0.0 || player.movement.1 != 0.0 {
+        if player.movement.0 != 0.0 {
             rigid_body.set_linvel(
-                vector![player.movement.0 * 20.0, player.movement.1 * 20.0],
+                vector![player.movement.0 * 10.0, rigid_body.linvel().y],
+                true,
+            );
+        }
+        if player.movement.1 != 0.0 {
+            rigid_body.set_linvel(
+                vector![rigid_body.linvel().x, player.movement.1 * 10.0],
                 true,
             );
         }
@@ -64,13 +73,12 @@ fn step(ball: Ball, players: Vec<Player>) -> (Ball, Vec<Player>) {
         let character_body_handle = rigid_body_set.insert(rigid_body);
         collider_set.insert_with_parent(collider, character_body_handle, &mut rigid_body_set);
         character_body_handles.push(character_body_handle);
+        //Clone players to be able to return them later
         cloned_players.push(player);
     }
 
-    // move character to the right
-    // let character_body = rigid_body_set[character_body_handle];
-
     /* Create other structures necessary for the simulation. */
+    // Gravity is zero because we are in 2D top down game
     let gravity = vector![0.0, 0.0];
     let integration_parameters = IntegrationParameters::default();
     let mut physics_pipeline = PhysicsPipeline::new();
