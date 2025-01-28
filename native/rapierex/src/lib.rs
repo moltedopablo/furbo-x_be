@@ -31,6 +31,9 @@ fn step(ball: Ball, court: Court, players: Vec<Player>) -> (Ball, Vec<Player>) {
     let mut collider_set = ColliderSet::new();
 
     let walls_restituion = 1.0;
+    let player_speed_mult = 10.0;
+    let kick_speed_mult = 24.0;
+
     /* Create the court. Upper and Lower sides */
     let collider = ColliderBuilder::polyline(
         vec![
@@ -102,7 +105,10 @@ fn step(ball: Ball, court: Court, players: Vec<Player>) -> (Ball, Vec<Player>) {
         .build();
     if ball.shoot_dir.0 != 0.0 || ball.shoot_dir.1 != 0.0 {
         rigid_body.set_linvel(
-            vector![ball.shoot_dir.0 * 18.0, ball.shoot_dir.1 * 18.0],
+            vector![
+                ball.shoot_dir.0 * kick_speed_mult,
+                ball.shoot_dir.1 * kick_speed_mult
+            ],
             true,
         );
     }
@@ -125,13 +131,13 @@ fn step(ball: Ball, court: Court, players: Vec<Player>) -> (Ball, Vec<Player>) {
 
         if player.movement.0 != 0.0 {
             rigid_body.set_linvel(
-                vector![player.movement.0 * 10.0, rigid_body.linvel().y],
+                vector![player.movement.0 * player_speed_mult, rigid_body.linvel().y],
                 true,
             );
         }
         if player.movement.1 != 0.0 {
             rigid_body.set_linvel(
-                vector![rigid_body.linvel().x, player.movement.1 * 10.0],
+                vector![rigid_body.linvel().x, player.movement.1 * player_speed_mult],
                 true,
             );
         }
