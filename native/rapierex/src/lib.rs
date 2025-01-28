@@ -20,6 +20,7 @@ pub struct Court {
     pub width: f32,
     pub height: f32,
     pub goal_width: f32,
+    pub goal_depth: f32,
 }
 
 #[rustler::nif]
@@ -44,6 +45,30 @@ fn step(ball: Ball, court: Court, players: Vec<Player>) -> (Ball, Vec<Player>) {
             point![-court.width / 2.0, -court.goal_width / 2.0],
             point![-court.width / 2.0, -court.height / 2.0],
             point![court.width / 2.0, -court.height / 2.0],
+            point![court.width / 2.0, -court.goal_width / 2.0],
+        ],
+        None,
+    );
+    collider_set.insert(collider);
+
+    /* Create left goal */
+    let collider = ColliderBuilder::polyline(
+        vec![
+            point![-court.width / 2.0, court.goal_width / 2.0],
+            point![-court.width / 2.0 - court.goal_depth, court.goal_width / 2.0],
+            point![-court.width / 2.0 - court.goal_depth, -court.goal_width / 2.0],
+            point![-court.width / 2.0, -court.goal_width / 2.0],
+        ],
+        None,
+    );
+    collider_set.insert(collider);
+
+    /* Create right goal */
+    let collider = ColliderBuilder::polyline(
+        vec![
+            point![court.width / 2.0, court.goal_width / 2.0],
+            point![court.width / 2.0 + court.goal_depth, court.goal_width / 2.0],
+            point![court.width / 2.0 + court.goal_depth, -court.goal_width / 2.0],
             point![court.width / 2.0, -court.goal_width / 2.0],
         ],
         None,

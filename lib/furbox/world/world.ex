@@ -14,7 +14,7 @@ defmodule Furbox.World do
     :players => []
   }
 
-  @court_dimensions %{:width => 100.0, :height => 50.0, :goal_width => 12.0}
+  @court_dimensions %{:width => 100.0, :height => 50.0, :goal_width => 12.0, :goal_depth => 6.0}
 
   # Client fn
   @spec start_link(any()) :: :ignore | {:error, any()} | {:ok, pid()}
