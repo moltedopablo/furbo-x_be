@@ -5,5 +5,5 @@ defmodule RapierEx do
     # must match the name of the crate in `native/rustlerpdf/Cargo.toml`
     crate: :rapierex
 
-  def step(_ball, _players), do: :erlang.nif_error(:nif_not_loaded)
+  def step(_ball, _court, _players), do: :erlang.nif_error(:nif_not_loaded)
 end

@@ -14,6 +14,8 @@ defmodule Furbox.World do
     :players => []
   }
 
+  @court_dimensions %{:width => 100.0, :height => 50.0, :goal_width => 12.0}
+
   # Client fn
   @spec start_link(any()) :: :ignore | {:error, any()} | {:ok, pid()}
   def start_link(_default) do
@@ -132,10 +134,15 @@ defmodule Furbox.World do
     state[:players] |> Enum.find(fn p -> p[:id] == player_id end)
   end
 
+  def get_court_dimensions() do
+    @court_dimensions
+  end
+
   defp step(state) do
     {new_ball, new_players} =
       RapierEx.step(
         state.ball,
+        @court_dimensions,
         state.players
       )
 

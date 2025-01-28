@@ -1,5 +1,5 @@
 // extern crate rapier2d;
-use rapier2d::prelude::*;
+use rapier2d::{na::OPoint, parry::query::point, prelude::*};
 use rustler::NifMap;
 
 #[derive(NifMap)]
@@ -15,15 +15,40 @@ pub struct Player {
     pub lin_vel: (f32, f32),
     pub movement: (f32, f32),
 }
+#[derive(NifMap)]
+pub struct Court {
+    pub width: f32,
+    pub height: f32,
+    pub goal_width: f32,
+}
 
 #[rustler::nif]
-fn step(ball: Ball, players: Vec<Player>) -> (Ball, Vec<Player>) {
+fn step(ball: Ball, court: Court, players: Vec<Player>) -> (Ball, Vec<Player>) {
     let mut rigid_body_set = RigidBodySet::new();
     let mut collider_set = ColliderSet::new();
 
-    /* Create the ground. */
-    // let collider = ColliderBuilder::cuboid(100.0, 0.1).build();
-    // collider_set.insert(collider);
+    /* Create the court. Upper and Lower sides */
+    let collider = ColliderBuilder::polyline(
+        vec![
+            point![-court.width / 2.0, court.goal_width / 2.0],
+            point![-court.width / 2.0, court.height / 2.0],
+            point![court.width / 2.0, court.height / 2.0],
+            point![court.width / 2.0, court.goal_width / 2.0],
+        ],
+        None,
+    );
+    collider_set.insert(collider);
+
+    let collider = ColliderBuilder::polyline(
+        vec![
+            point![-court.width / 2.0, -court.goal_width / 2.0],
+            point![-court.width / 2.0, -court.height / 2.0],
+            point![court.width / 2.0, -court.height / 2.0],
+            point![court.width / 2.0, -court.goal_width / 2.0],
+        ],
+        None,
+    );
+    collider_set.insert(collider);
 
     /* Create the bouncing ball. */
     let mut rigid_body = RigidBodyBuilder::dynamic()

@@ -4,8 +4,9 @@ defmodule FurboxWeb.WorldChannel do
   @impl true
   def join("furbox:main", payload, socket) do
     if authorized?(payload) do
-      player_number = Furbox.World.new_player()
-      {:ok, player_number, socket}
+      player_id = Furbox.World.new_player()
+      court_dimensions = Furbox.World.get_court_dimensions()
+      {:ok, %{:player_id => player_id, :court_dimensions => court_dimensions}, socket}
     else
       {:error, %{reason: "unauthorized"}}
     end
