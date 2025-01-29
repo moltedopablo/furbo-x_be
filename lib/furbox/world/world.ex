@@ -37,8 +37,12 @@ defmodule Furbox.World do
     GenServer.call(FurboxWorld, {:move_player, player, position_offset})
   end
 
-  def new_player() do
-    GenServer.call(FurboxWorld, {:new_player})
+  def new_player(channel_pid) do
+    GenServer.call(FurboxWorld, {:new_player, channel_pid})
+  end
+
+  def player_disconnected(channel_pid) do
+    GenServer.call(FurboxWorld, {:player_disconnected, channel_pid})
   end
 
   def kick(player) do
@@ -78,7 +82,7 @@ defmodule Furbox.World do
     {:reply, new_state, new_state}
   end
 
-  def handle_call({:new_player}, _from, state) do
+  def handle_call({:new_player, channel_pid}, _from, state) do
     player_number = Enum.count(state[:players]) + 1
 
     new_state =
@@ -87,6 +91,7 @@ defmodule Furbox.World do
           [
             %{
               :id => player_number,
+              :channel_pid => channel_pid,
               :position => {player_number / 1, 0.0},
               :lin_vel => {0.0, 0.0},
               :movement => {0.0, 0.0},
@@ -96,6 +101,15 @@ defmodule Furbox.World do
       end)
 
     {:reply, player_number, new_state}
+  end
+
+  def handle_call({:player_disconnected, channel_pid}, _from, state) do
+    new_state =
+      Map.update!(state, :players, fn players ->
+        Enum.filter(players, fn p -> p[:channel_pid] != channel_pid end)
+      end)
+
+    {:reply, new_state, new_state}
   end
 
   def handle_call({:kick, player_id}, _from, state) do

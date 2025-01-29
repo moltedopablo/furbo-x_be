@@ -4,12 +4,18 @@ defmodule FurboxWeb.WorldChannel do
   @impl true
   def join("furbox:main", payload, socket) do
     if authorized?(payload) do
-      player_id = Furbox.World.new_player()
+      player_id = Furbox.World.new_player(socket.channel_pid)
       court_dimensions = Furbox.World.get_court_dimensions()
       {:ok, %{:player_id => player_id, :court_dimensions => court_dimensions}, socket}
     else
       {:error, %{reason: "unauthorized"}}
     end
+  end
+
+  @impl true
+  def terminate(_reason, socket) do
+    Furbox.World.player_disconnected(socket.channel_pid)
+    :ok
   end
 
   # Channels can be used in a request/response fashion
